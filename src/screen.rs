@@ -103,46 +103,50 @@ impl Screen {
     pub fn asciify(&mut self, style: u8) {
         match style {
             0 => {
-                self.lines.iter_mut().map(|line_vec| {
-                    line_vec.iter_mut().map(|mut c| match c {
-                        '─' => c = &mut '-',
-                        '│' => c = &mut '|',
-                        '┐' => c = &mut '.',
-                        '┘' => c = &mut '\'',
-                        '┌' => c = &mut '.',
-                        '└' => c = &mut '\'',
-                        '┬' => c = &mut '-',
-                        '┴' => c = &mut '-',
-                        '├' => c = &mut '-',
-                        '┤' => c = &mut '-',
-                        '△' => c = &mut '^',
-                        '▽' => c = &mut 'V',
-                        _ => {
-                            println!("{}?", c);
+                for line_vec in self.lines.iter_mut() {
+                    for c in line_vec.iter_mut() {
+                        match c {
+                            '─' => *c = '-',
+                            '│' => *c = '|',
+                            '┐' => *c = '.',
+                            '┘' => *c = '\'',
+                            '┌' => *c = '.',
+                            '└' => *c = '\'',
+                            '┬' => *c = '-',
+                            '┴' => *c = '-',
+                            '├' => *c = '-',
+                            '┤' => *c = '-',
+                            '△' => *c = '^',
+                            '▽' => *c = 'V',
+                            _ => {
+                                println!("{}?", c);
+                            }
                         }
-                    })
-                });
+                    }
+                }
             }
             1 => {
-                self.lines.iter_mut().map(|line_vec| {
-                    line_vec.iter_mut().map(|mut c| match c {
-                        '─' => c = &mut '-',
-                        '│' => c = &mut '|',
-                        '┐' => c = &mut '.',
-                        '┘' => c = &mut '\'',
-                        '┌' => c = &mut '.',
-                        '└' => c = &mut '\'',
-                        '┬' => c = &mut '.',
-                        '┴' => c = &mut '\'',
-                        '├' => c = &mut '-',
-                        '┤' => c = &mut '-',
-                        '△' => c = &mut '^',
-                        '▽' => c = &mut 'V',
-                        _ => {
-                            println!("{}?", c);
-                        }
-                    })
-                });
+                for line_vec in self.lines.iter_mut() {
+                    for c in line_vec.iter_mut() {
+                        match c {
+                            '─' => *c = '-',
+                            '│' => *c = '|',
+                            '┐' => *c = '.',
+                            '┘' => *c = '\'',
+                            '┌' => *c = '.',
+                            '└' => *c = '\'',
+                            '┬' => *c = '.',
+                            '┴' => *c = '\'',
+                            '├' => *c = '-',
+                            '┤' => *c = '-',
+                            '△' => *c = '^',
+                            '▽' => *c = 'V',
+                            _ => {
+                                println!("{}?", c);
+                            }
+                        };
+                    }
+                }
             }
             _ => {
                 println!("error style {}", style);

@@ -8,7 +8,9 @@ Application.
 We also expose a command line interface, for personal and 3rd party tools.
 
 # Support Subcommand
-- [ ] tree (doing)
+- [ ] tree 
+  - [x] feature support
+  - [ ] subcommand add
 - [ ] table (todo)
 - [ ] sequence (todo)
 - [ ] frame (todo)
