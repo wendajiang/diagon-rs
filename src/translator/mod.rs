@@ -51,15 +51,10 @@ pub trait Translator {
 pub fn serialize_option(options: String) -> HashMap<String, String> {
     let mut lines_iter = options.lines();
     let mut res = HashMap::new();
-    loop {
-        let label = lines_iter.next();
-        let value = lines_iter.next();
-        if label.is_none() || value.is_none() {
-            break;
+    while let Some(label) = lines_iter.next() {
+        if let Some(value) = lines_iter.next() {
+            res.insert(label.to_string(), value.to_string());
         }
-        let label = label.unwrap();
-        let value = value.unwrap();
-        res.insert(label.to_string(), value.to_string());
     }
     res
 }
