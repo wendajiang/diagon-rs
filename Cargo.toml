@@ -9,3 +9,4 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "3" , features = ["derive"]}
+once_cell = { version = "1" }

@@ -1,7 +1,5 @@
 use crate::translator::{serialize_option, Example, OptionDescription, Translator};
-use std::collections::HashMap;
 use std::ptr;
-use std::ptr::{addr_of_mut, null_mut};
 
 struct Node {
     content: Vec<char>,
@@ -19,7 +17,7 @@ impl Node {
     }
 }
 
-struct Tree {
+pub struct Tree {
     root: *mut Node,
 }
 
@@ -245,8 +243,8 @@ fn print_tree_by_align_style(style: Align, tree: Tree) -> String {
     res
 }
 
-impl Tree {
-    pub fn translate(input: &str, options_string: String) -> String {
+impl Translator for Tree {
+    fn translate(input: &str, options_string: String) -> String {
         let options = serialize_option(options_string);
 
         let style_option = options.get("style").unwrap();
@@ -309,9 +307,6 @@ impl Tree {
             _ => print_tree_by_print_style(PrintStyle::Unicode1, tree),
         }
     }
-}
-
-impl Translator for Tree {
     fn identifier() -> String {
         "Tree".to_string()
     }
@@ -321,28 +316,23 @@ impl Translator for Tree {
     fn description() -> String {
         "Draw a tree".to_string()
     }
-    fn options() -> HashMap<String, OptionDescription> {
-        let mut res = HashMap::new();
-        res.insert(
-            "style".to_string(),
-            OptionDescription {
-                name: "style".to_string(),
-                values: vec![
-                    "unicode 1".to_string(),
-                    "unicode 2".to_string(),
-                    "ASCII 1".to_string(),
-                    "ASCII 2".to_string(),
-                    "ASCII 3".to_string(),
-                    "unicode right top".to_string(),
-                    "unicode right center".to_string(),
-                    "unicode right bottom".to_string(),
-                ],
-                default_value: "unicode 1".to_string(),
-                description: "The style of the tree.".to_string(),
-                r#type: Default::default(),
-            },
-        );
-        res
+    fn options() -> Vec<OptionDescription> {
+        vec![OptionDescription {
+            name: "style".to_string(),
+            values: vec![
+                "unicode 1".to_string(),
+                "unicode 2".to_string(),
+                "ASCII 1".to_string(),
+                "ASCII 2".to_string(),
+                "ASCII 3".to_string(),
+                "unicode right top".to_string(),
+                "unicode right center".to_string(),
+                "unicode right bottom".to_string(),
+            ],
+            default_value: "unicode 1".to_string(),
+            description: "The style of the tree.".to_string(),
+            r#type: Default::default(),
+        }]
     }
     fn examples() -> Vec<Example> {
         vec![Example {
