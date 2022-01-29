@@ -8,15 +8,13 @@ Application.
 We also expose a command line interface, for personal and 3rd party tools.
 
 # Support Subcommand
-- [ ] tree 
-  - [x] feature support
-  - [ ] subcommand add
-- [ ] table (todo)
+- [x] tree
+- [ ] table (doing)
+- [ ] math (todo)
 - [ ] sequence (todo)
 - [ ] frame (todo)
 - [ ] graph_dag (todo)
 - [ ] graph_planar (todo)
-- [ ] math (todo)
 
 
 # Diagon Generators Example
