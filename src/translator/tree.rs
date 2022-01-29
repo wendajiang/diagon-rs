@@ -96,7 +96,7 @@ fn print_tree_by_print_style(print_style: PrintStyle, tree: Tree) -> String {
     let mut output = String::new();
     unsafe {
         for child in &(*node).children {
-            let content = unsafe { (*(*child)).content.clone() };
+            let content = (*(*child)).content.clone();
             output.push_str((String::from_iter(content) + "\n").as_str());
             output.push_str(print_tree_code(&middle, &end, "", *child).as_str());
         }
@@ -165,7 +165,7 @@ fn merge_display_tree(align: Align, children: Vec<DisplayTree>, content: Vec<cha
     res.content[res.entrance][..content.len()].clone_from_slice(&content[..]);
 
     // draw vertex
-    let mut first_entrance = children[0_usize].entrance;
+    let first_entrance = children[0_usize].entrance;
     let mut last_entrance = 0_usize;
     {
         let mut y = 0_usize;
@@ -189,7 +189,6 @@ fn merge_display_tree(align: Align, children: Vec<DisplayTree>, content: Vec<cha
 
         // refine connector on child entrance points
         let child_entrance = start + child.entrance;
-        let connector = res.content[child_entrance][content.len() + 1];
         if first_entrance == last_entrance {
             res.content[child_entrance][content.len() + 1] = '─';
         } else if child_entrance == first_entrance {
@@ -204,7 +203,7 @@ fn merge_display_tree(align: Align, children: Vec<DisplayTree>, content: Vec<cha
         res.content[child_entrance][content.len() + 2] = '─';
     }
     // draw parent entrance to connector
-    res.content[res.entrance][content.len() + 0] = '─';
+    res.content[res.entrance][content.len()] = '─';
     // refine connector on parent entrance points
     let connector = res.content[res.entrance][content.len() + 1];
     match connector {
@@ -244,10 +243,26 @@ fn print_tree_by_align_style(style: Align, tree: Tree) -> String {
 }
 
 impl Translator for Tree {
-    fn translate(input: &str, options_string: String) -> String {
-        let options = serialize_option(options_string);
+    /// examples:
+    /// cargo run --release -- --component "Tree" --options "style
+    /// ASCII 1" --content "
+    /// Linux
+    ///   Android
+    ///   Debian
+    ///     Ubuntu
+    ///       Lubuntu
+    ///       Kubuntu
+    ///       Xubuntu
+    ///       Xubuntu
+    ///     Mint
+    ///   Centos
+    ///   Fedora"
+    ///
+    fn translate(input: &str, input_options: &str) -> String {
+        let options = serialize_option(input_options);
+        let default_style = "unicode 1".to_string();
 
-        let style_option = options.get("style").unwrap();
+        let style_option = options.get("style").unwrap_or(&default_style);
 
         // parse input string
         let mut print_lines: Vec<Line> = Vec::new();
@@ -356,12 +371,8 @@ r"Linux
 
 #[cfg(test)]
 mod tests {
-    use crate::translator::tree::{Node, PrintStyle, Tree};
+    use crate::translator::tree::Tree;
     use crate::translator::Translator;
-    use std::cell::{Ref, RefCell};
-    use std::ptr;
-    use std::ptr::{addr_of, addr_of_mut};
-    use std::rc::Rc;
 
     #[test]
     fn test_tree_options() {
@@ -380,44 +391,35 @@ mod tests {
         for example in examples {
             println!(
                 "unicode 1\n{}",
-                Tree::translate(example.input.as_str(), "style\nunicode 1".to_string())
+                Tree::translate(example.input.as_str(), "style\nunicode 1")
             );
             println!(
                 "unicode 2\n{}",
-                Tree::translate(example.input.as_str(), "style\nunicode 2".to_string())
+                Tree::translate(example.input.as_str(), "style\nunicode 2")
             );
             println!(
                 "ASCII 1\n{}",
-                Tree::translate(example.input.as_str(), "style\nASCII 1".to_string())
+                Tree::translate(example.input.as_str(), "style\nASCII 1")
             );
             println!(
                 "ASCII 2\n{}",
-                Tree::translate(example.input.as_str(), "style\nASCII 2".to_string())
+                Tree::translate(example.input.as_str(), "style\nASCII 2")
             );
             println!(
                 "ASCII 3\n{}",
-                Tree::translate(example.input.as_str(), "style\nASCII 3".to_string())
+                Tree::translate(example.input.as_str(), "style\nASCII 3")
             );
             println!(
                 "unicode right top\n{}",
-                Tree::translate(
-                    example.input.as_str(),
-                    "style\nunicode right top".to_string()
-                )
+                Tree::translate(example.input.as_str(), "style\nunicode right top")
             );
             println!(
                 "unicode right center\n{}",
-                Tree::translate(
-                    example.input.as_str(),
-                    "style\nunicode right center".to_string()
-                )
+                Tree::translate(example.input.as_str(), "style\nunicode right center")
             );
             println!(
                 "unicode right bottom\n{}",
-                Tree::translate(
-                    example.input.as_str(),
-                    "style\nunicode right bottom".to_string()
-                )
+                Tree::translate(example.input.as_str(), "style\nunicode right bottom")
             );
         }
     }

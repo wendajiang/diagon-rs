@@ -1,7 +1,7 @@
 mod tree;
 
 use crate::translator::Widget::Combobox;
-use once_cell::sync::OnceCell;
+use once_cell::sync::{Lazy, OnceCell};
 use std::collections::HashMap;
 use tree::Tree;
 
@@ -33,7 +33,7 @@ pub struct Example {
 }
 
 pub trait Translator {
-    fn translate(_input: &str, _options: String) -> String {
+    fn translate(_input: &str, _options: &str) -> String {
         String::default()
     }
     fn identifier() -> String {
@@ -53,12 +53,12 @@ pub trait Translator {
     }
 }
 
-pub fn serialize_option(options: String) -> HashMap<String, String> {
+pub fn serialize_option(options: &str) -> HashMap<String, String> {
     let mut lines_iter = options.lines();
     let mut res = HashMap::new();
     while let Some(label) = lines_iter.next() {
         if let Some(value) = lines_iter.next() {
-            res.insert(label.to_string(), value.to_string());
+            res.insert(label.trim_end().to_string(), value.trim_end().to_string());
         }
     }
     res
@@ -67,23 +67,20 @@ pub fn serialize_option(options: String) -> HashMap<String, String> {
 pub type GlobalHashMap = HashMap<
     String,
     (
-        fn(&str, String) -> String,
+        fn(&str, &str) -> String,
         fn() -> Vec<OptionDescription>,
         fn() -> Vec<Example>,
     ),
 >;
 
 // FIXME how to refactor this global store for dynamically adding support subcommand
-pub fn global_fn() -> &'static GlobalHashMap {
-    static GLOBAL_FN: OnceCell<GlobalHashMap> = OnceCell::new();
-
-    GLOBAL_FN.get_or_init(|| {
-        let mut res: GlobalHashMap = HashMap::new();
-        res.insert(
-            Tree::identifier(),
-            (Tree::translate, Tree::options, Tree::examples),
-        );
-
-        res
-    })
-}
+// https://isocpp.org/wiki/faq/ctors#static-init-order
+// https://docs.rs/once_cell/1.9.0/once_cell/
+pub(crate) static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
+    let mut res: GlobalHashMap = HashMap::new();
+    res.insert(
+        Tree::identifier(),
+        (Tree::translate, Tree::options, Tree::examples),
+    );
+    res
+});

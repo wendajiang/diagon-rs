@@ -2,24 +2,23 @@ mod args;
 mod screen;
 mod translator;
 
-use crate::translator::global_fn;
 use args::*;
 use clap::Parser;
 
-enum SubCommand {
-    Tree,
-}
-
 fn main() {
-    let args = Args::parse();
-    let global_call = global_fn();
-    let maybe_fn = global_call.get("Tree");
+    // parse args
+    let mut args = Args::parse();
+    interactive_args(&mut args);
+
+    let maybe_fn = translator::GLOBAL_FN.get(args.component.as_str());
     if maybe_fn.is_none() {
-        println!("not support subcommand tree");
+        println!("not support subcommand {}", args.component.as_str());
         return;
     }
 
     let (translate, options, examples) = maybe_fn.unwrap();
 
-    println!("test {} {}!", args.content, args.component);
+    let output = translate(args.content.as_str(), args.options.as_str());
+
+    println!("{}", output);
 }
