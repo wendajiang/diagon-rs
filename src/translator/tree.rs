@@ -244,8 +244,9 @@ fn print_tree_by_align_style(style: Align, tree: Tree) -> String {
 
 impl Translator for Tree {
     /// examples:
-    /// cargo run --release -- --component "Tree" --options "style
-    /// ASCII 1" --content "
+    /// shell command
+    /// ```shell
+    /// cargo run --release -- --command "Tree"  --content "
     /// Linux
     ///   Android
     ///   Debian
@@ -256,7 +257,9 @@ impl Translator for Tree {
     ///       Xubuntu
     ///     Mint
     ///   Centos
-    ///   Fedora"
+    ///   Fedora" -i / --options "style
+    /// unicode 1"
+    /// ```
     ///
     fn translate(input: &str, input_options: &str) -> String {
         let options = serialize_option(input_options);

@@ -6,7 +6,9 @@ use dialoguer::Select;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
-    #[clap(long)]
+    #[clap(long = "command",
+    possible_values =
+    ["Tree"])]
     pub component: String,
 
     #[clap(long)]
