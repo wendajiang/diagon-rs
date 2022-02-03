@@ -76,7 +76,7 @@ pub type GlobalHashMap = HashMap<
 // FIXME how to refactor this global store for dynamically adding support subcommand
 // https://isocpp.org/wiki/faq/ctors#static-init-order
 // https://docs.rs/once_cell/1.9.0/once_cell/
-pub(crate) static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
+pub static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
     let mut res: GlobalHashMap = HashMap::new();
     res.insert(
         Tree::identifier(),

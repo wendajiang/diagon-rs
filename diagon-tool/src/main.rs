@@ -1,9 +1,8 @@
 mod args;
-mod screen;
-mod translator;
 
-use args::*;
+use crate::args::{interactive_args, Args};
 use clap::Parser;
+use diagon::translator;
 
 fn main() {
     // parse args
