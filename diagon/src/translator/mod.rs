@@ -1,3 +1,4 @@
+mod antlr;
 mod sequence;
 mod tree;
 

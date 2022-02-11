@@ -10,7 +10,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 once_cell = { version = "1" }
+antlr-rust = { version = "0.2" }
 
 [build-dependencies]
-# antlr-rust = { version = "0.2" }
 
