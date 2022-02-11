@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 fn main() {
-    let antlr_files = vec![("sequence")];
+    let antlr_files = vec!["sequence", "math", "flowchart", "graph_planar"];
 
     let additional_args = vec![Some("-visitor"), None, None, None, None];
     let antlr_path =
