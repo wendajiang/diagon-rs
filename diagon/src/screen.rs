@@ -13,7 +13,7 @@ impl Screen {
         Self {
             dim_x: width,
             dim_y: height,
-            lines: vec![line_vec.to_owned(); height as usize],
+            lines: vec![line_vec; height as usize],
         }
     }
     pub fn draw_pixel(&mut self, x: i32, y: i32, c: char) {

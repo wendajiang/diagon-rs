@@ -1,3 +1,4 @@
+mod sequence;
 mod tree;
 
 use crate::translator::Widget::Combobox;
