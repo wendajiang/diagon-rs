@@ -243,6 +243,51 @@ fn print_tree_by_align_style(style: Align, tree: Tree) -> String {
 }
 
 impl Translator for Tree {
+    fn identifier() -> String {
+        "Tree".to_string()
+    }
+    fn name() -> String {
+        "Tree".to_string()
+    }
+    fn description() -> String {
+        "Draw a tree".to_string()
+    }
+    fn options() -> Vec<OptionDescription> {
+        vec![OptionDescription {
+            name: "style".to_string(),
+            values: vec![
+                "unicode 1".to_string(),
+                "unicode 2".to_string(),
+                "ASCII 1".to_string(),
+                "ASCII 2".to_string(),
+                "ASCII 3".to_string(),
+                "unicode right top".to_string(),
+                "unicode right center".to_string(),
+                "unicode right bottom".to_string(),
+            ],
+            default_value: "unicode 1".to_string(),
+            description: "The style of the tree.".to_string(),
+            r#type: Default::default(),
+        }]
+    }
+    fn examples() -> Vec<Example> {
+        vec![Example {
+            title: "1 - Simple".to_string(),
+            #[rustfmt::skip]
+            input:
+r"Linux
+  Android
+  Debian
+    Ubuntu
+      Lubuntu
+      Kubuntu
+      Xubuntu
+      Xubuntu
+    Mint
+  Centos
+  Fedora".to_string(),
+        }]
+    }
     /// examples:
     /// shell command
     /// ```shell
@@ -324,51 +369,6 @@ impl Translator for Tree {
             "unicode right bottom" => print_tree_by_align_style(Align::Bottom, tree),
             _ => print_tree_by_print_style(PrintStyle::Unicode1, tree),
         }
-    }
-    fn identifier() -> String {
-        "Tree".to_string()
-    }
-    fn name() -> String {
-        "Tree".to_string()
-    }
-    fn description() -> String {
-        "Draw a tree".to_string()
-    }
-    fn options() -> Vec<OptionDescription> {
-        vec![OptionDescription {
-            name: "style".to_string(),
-            values: vec![
-                "unicode 1".to_string(),
-                "unicode 2".to_string(),
-                "ASCII 1".to_string(),
-                "ASCII 2".to_string(),
-                "ASCII 3".to_string(),
-                "unicode right top".to_string(),
-                "unicode right center".to_string(),
-                "unicode right bottom".to_string(),
-            ],
-            default_value: "unicode 1".to_string(),
-            description: "The style of the tree.".to_string(),
-            r#type: Default::default(),
-        }]
-    }
-    fn examples() -> Vec<Example> {
-        vec![Example {
-            title: "1 - Simple".to_string(),
-            #[rustfmt::skip]
-            input:
-r"Linux
-  Android
-  Debian
-    Ubuntu
-      Lubuntu
-      Kubuntu
-      Xubuntu
-      Xubuntu
-    Mint
-  Centos
-  Fedora".to_string(),
-        }]
     }
 }
 

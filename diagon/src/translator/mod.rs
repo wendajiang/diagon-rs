@@ -1,5 +1,6 @@
 mod antlr;
 mod sequence;
+mod sequence_graph;
 mod tree;
 
 use crate::translator::Widget::Combobox;
@@ -35,9 +36,6 @@ pub struct Example {
 }
 
 pub trait Translator {
-    fn translate(_input: &str, _options: &str) -> String {
-        String::default()
-    }
     fn identifier() -> String {
         String::default()
     }
@@ -52,6 +50,10 @@ pub trait Translator {
     }
     fn examples() -> Vec<Example> {
         Vec::new()
+    }
+
+    fn translate(_input: &str, _options: &str) -> String {
+        String::default()
     }
 }
 
