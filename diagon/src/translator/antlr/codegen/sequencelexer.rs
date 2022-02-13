@@ -4,97 +4,120 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 use antlr_rust::atn::ATN;
+use antlr_rust::atn_deserializer::ATNDeserializer;
 use antlr_rust::char_stream::CharStream;
+use antlr_rust::dfa::DFA;
+use antlr_rust::error_listener::ErrorListener;
 use antlr_rust::int_stream::IntStream;
 use antlr_rust::lexer::{BaseLexer, Lexer, LexerRecog};
-use antlr_rust::atn_deserializer::ATNDeserializer;
-use antlr_rust::dfa::DFA;
-use antlr_rust::lexer_atn_simulator::{LexerATNSimulator, ILexerATNSimulator};
-use antlr_rust::PredictionContextCache;
-use antlr_rust::recognizer::{Recognizer,Actions};
-use antlr_rust::error_listener::ErrorListener;
-use antlr_rust::TokenSource;
-use antlr_rust::token_factory::{TokenFactory,CommonTokenFactory,TokenAware};
+use antlr_rust::lexer_atn_simulator::{ILexerATNSimulator, LexerATNSimulator};
+use antlr_rust::parser_rule_context::{cast, BaseParserRuleContext, ParserRuleContext};
+use antlr_rust::recognizer::{Actions, Recognizer};
+use antlr_rust::rule_context::{BaseRuleContext, EmptyContext, EmptyCustomRuleContext};
 use antlr_rust::token::*;
-use antlr_rust::rule_context::{BaseRuleContext,EmptyCustomRuleContext,EmptyContext};
-use antlr_rust::parser_rule_context::{ParserRuleContext,BaseParserRuleContext,cast};
-use antlr_rust::vocabulary::{Vocabulary,VocabularyImpl};
+use antlr_rust::token_factory::{CommonTokenFactory, TokenAware, TokenFactory};
+use antlr_rust::vocabulary::{Vocabulary, VocabularyImpl};
+use antlr_rust::PredictionContextCache;
+use antlr_rust::TokenSource;
 
-use antlr_rust::{lazy_static,Tid,TidAble,TidExt};
+use antlr_rust::{lazy_static, Tid, TidAble, TidExt};
 
-use std::sync::Arc;
 use std::cell::RefCell;
-use std::rc::Rc;
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
+use std::rc::Rc;
+use std::sync::Arc;
 
+pub const T__0: isize = 1;
+pub const NormalRightArrow: isize = 2;
+pub const NormalLeftArrow: isize = 3;
+pub const Comma: isize = 4;
+pub const Less: isize = 5;
+pub const More: isize = 6;
+pub const Colon: isize = 7;
+pub const EOL: isize = 8;
+pub const Number: isize = 9;
+pub const Space: isize = 10;
+pub const Other: isize = 11;
+pub const channelNames: [&'static str; 0 + 2] = ["DEFAULT_TOKEN_CHANNEL", "HIDDEN"];
 
-	pub const T__0:isize=1; 
-	pub const NormalRightArrow:isize=2; 
-	pub const NormalLeftArrow:isize=3; 
-	pub const Comma:isize=4; 
-	pub const Less:isize=5; 
-	pub const More:isize=6; 
-	pub const Colon:isize=7; 
-	pub const EOL:isize=8; 
-	pub const Number:isize=9; 
-	pub const Space:isize=10; 
-	pub const Other:isize=11;
-	pub const channelNames: [&'static str;0+2] = [
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
-	];
+pub const modeNames: [&'static str; 1] = ["DEFAULT_MODE"];
 
-	pub const modeNames: [&'static str;1] = [
-		"DEFAULT_MODE"
-	];
+pub const ruleNames: [&'static str; 12] = [
+    "T__0",
+    "NormalRightArrow",
+    "NormalLeftArrow",
+    "Comma",
+    "Less",
+    "More",
+    "Colon",
+    "EOL",
+    "Digit",
+    "Number",
+    "Space",
+    "Other",
+];
 
-	pub const ruleNames: [&'static str;12] = [
-		"T__0", "NormalRightArrow", "NormalLeftArrow", "Comma", "Less", "More", 
-		"Colon", "EOL", "Digit", "Number", "Space", "Other"
-	];
+pub const _LITERAL_NAMES: [Option<&'static str>; 8] = [
+    None,
+    Some("')'"),
+    Some("'->'"),
+    Some("'<-'"),
+    Some("':'"),
+    Some("'<'"),
+    Some("'>'"),
+    Some("','"),
+];
+pub const _SYMBOLIC_NAMES: [Option<&'static str>; 12] = [
+    None,
+    None,
+    Some("NormalRightArrow"),
+    Some("NormalLeftArrow"),
+    Some("Comma"),
+    Some("Less"),
+    Some("More"),
+    Some("Colon"),
+    Some("EOL"),
+    Some("Number"),
+    Some("Space"),
+    Some("Other"),
+];
+lazy_static! {
+    static ref _shared_context_cache: Arc<PredictionContextCache> =
+        Arc::new(PredictionContextCache::new());
+    static ref VOCABULARY: Box<dyn Vocabulary> = Box::new(VocabularyImpl::new(
+        _LITERAL_NAMES.iter(),
+        _SYMBOLIC_NAMES.iter(),
+        None
+    ));
+}
 
-
-	pub const _LITERAL_NAMES: [Option<&'static str>;8] = [
-		None, Some("')'"), Some("'->'"), Some("'<-'"), Some("':'"), Some("'<'"), 
-		Some("'>'"), Some("','")
-	];
-	pub const _SYMBOLIC_NAMES: [Option<&'static str>;12]  = [
-		None, None, Some("NormalRightArrow"), Some("NormalLeftArrow"), Some("Comma"), 
-		Some("Less"), Some("More"), Some("Colon"), Some("EOL"), Some("Number"), 
-		Some("Space"), Some("Other")
-	];
-	lazy_static!{
-	    static ref _shared_context_cache: Arc<PredictionContextCache> = Arc::new(PredictionContextCache::new());
-		static ref VOCABULARY: Box<dyn Vocabulary> = Box::new(VocabularyImpl::new(_LITERAL_NAMES.iter(), _SYMBOLIC_NAMES.iter(), None));
-	}
-
-
-pub type LexerContext<'input> = BaseRuleContext<'input,EmptyCustomRuleContext<'input,LocalTokenFactory<'input> >>;
+pub type LexerContext<'input> =
+    BaseRuleContext<'input, EmptyCustomRuleContext<'input, LocalTokenFactory<'input>>>;
 pub type LocalTokenFactory<'input> = CommonTokenFactory;
 
-type From<'a> = <LocalTokenFactory<'a> as TokenFactory<'a> >::From;
+type From<'a> = <LocalTokenFactory<'a> as TokenFactory<'a>>::From;
 
 #[derive(Tid)]
-pub struct sequenceLexer<'input, Input:CharStream<From<'input> >> {
-	base: BaseLexer<'input,sequenceLexerActions,Input,LocalTokenFactory<'input>>,
+pub struct sequenceLexer<'input, Input: CharStream<From<'input>>> {
+    base: BaseLexer<'input, sequenceLexerActions, Input, LocalTokenFactory<'input>>,
 }
 
-impl<'input, Input:CharStream<From<'input> >> Deref for sequenceLexer<'input,Input>{
-	type Target = BaseLexer<'input,sequenceLexerActions,Input,LocalTokenFactory<'input>>;
+impl<'input, Input: CharStream<From<'input>>> Deref for sequenceLexer<'input, Input> {
+    type Target = BaseLexer<'input, sequenceLexerActions, Input, LocalTokenFactory<'input>>;
 
-	fn deref(&self) -> &Self::Target {
-		&self.base
-	}
+    fn deref(&self) -> &Self::Target {
+        &self.base
+    }
 }
 
-impl<'input, Input:CharStream<From<'input> >> DerefMut for sequenceLexer<'input,Input>{
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		&mut self.base
-	}
+impl<'input, Input: CharStream<From<'input>>> DerefMut for sequenceLexer<'input, Input> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.base
+    }
 }
 
-
-impl<'input, Input:CharStream<From<'input> >> sequenceLexer<'input,Input>{
+impl<'input, Input: CharStream<From<'input>>> sequenceLexer<'input, Input> {
     fn get_rule_names(&self) -> &'static [&'static str] {
         &ruleNames
     }
@@ -110,50 +133,58 @@ impl<'input, Input:CharStream<From<'input> >> sequenceLexer<'input,Input>{
         "sequenceLexer.g4"
     }
 
-	pub fn new_with_token_factory(input: Input, tf: &'input LocalTokenFactory<'input>) -> Self {
-		antlr_rust::recognizer::check_version("0","2");
-    	Self {
-			base: BaseLexer::new_base_lexer(
-				input,
-				LexerATNSimulator::new_lexer_atnsimulator(
-					_ATN.clone(),
-					_decision_to_DFA.clone(),
-					_shared_context_cache.clone(),
-				),
-				sequenceLexerActions{},
-				tf
-			)
-	    }
-	}
+    pub fn new_with_token_factory(input: Input, tf: &'input LocalTokenFactory<'input>) -> Self {
+        antlr_rust::recognizer::check_version("0", "2");
+        Self {
+            base: BaseLexer::new_base_lexer(
+                input,
+                LexerATNSimulator::new_lexer_atnsimulator(
+                    _ATN.clone(),
+                    _decision_to_DFA.clone(),
+                    _shared_context_cache.clone(),
+                ),
+                sequenceLexerActions {},
+                tf,
+            ),
+        }
+    }
 }
 
-impl<'input, Input:CharStream<From<'input> >> sequenceLexer<'input,Input> where &'input LocalTokenFactory<'input>:Default{
-	pub fn new(input: Input) -> Self{
-		sequenceLexer::new_with_token_factory(input, <&LocalTokenFactory<'input> as Default>::default())
-	}
+impl<'input, Input: CharStream<From<'input>>> sequenceLexer<'input, Input>
+where
+    &'input LocalTokenFactory<'input>: Default,
+{
+    pub fn new(input: Input) -> Self {
+        sequenceLexer::new_with_token_factory(
+            input,
+            <&LocalTokenFactory<'input> as Default>::default(),
+        )
+    }
 }
 
-pub struct sequenceLexerActions {
+pub struct sequenceLexerActions {}
+
+impl sequenceLexerActions {}
+
+impl<'input, Input: CharStream<From<'input>>>
+    Actions<'input, BaseLexer<'input, sequenceLexerActions, Input, LocalTokenFactory<'input>>>
+    for sequenceLexerActions
+{
 }
 
-impl sequenceLexerActions{
+impl<'input, Input: CharStream<From<'input>>> sequenceLexer<'input, Input> {}
+
+impl<'input, Input: CharStream<From<'input>>>
+    LexerRecog<'input, BaseLexer<'input, sequenceLexerActions, Input, LocalTokenFactory<'input>>>
+    for sequenceLexerActions
+{
+}
+impl<'input> TokenAware<'input> for sequenceLexerActions {
+    type TF = LocalTokenFactory<'input>;
 }
 
-impl<'input, Input:CharStream<From<'input> >> Actions<'input,BaseLexer<'input,sequenceLexerActions,Input,LocalTokenFactory<'input>>> for sequenceLexerActions{
-	}
-
-	impl<'input, Input:CharStream<From<'input> >> sequenceLexer<'input,Input>{
-
-}
-
-impl<'input, Input:CharStream<From<'input> >> LexerRecog<'input,BaseLexer<'input,sequenceLexerActions,Input,LocalTokenFactory<'input>>> for sequenceLexerActions{
-}
-impl<'input> TokenAware<'input> for sequenceLexerActions{
-	type TF = LocalTokenFactory<'input>;
-}
-
-impl<'input, Input:CharStream<From<'input> >> TokenSource<'input> for sequenceLexer<'input,Input>{
-	type TF = LocalTokenFactory<'input>;
+impl<'input, Input: CharStream<From<'input>>> TokenSource<'input> for sequenceLexer<'input, Input> {
+    type TF = LocalTokenFactory<'input>;
 
     fn next_token(&mut self) -> <Self::TF as TokenFactory<'input>>::Tok {
         self.base.next_token()
@@ -171,38 +202,30 @@ impl<'input, Input:CharStream<From<'input> >> TokenSource<'input> for sequenceLe
         self.base.get_input_stream()
     }
 
-	fn get_source_name(&self) -> String {
-		self.base.get_source_name()
-	}
+    fn get_source_name(&self) -> String {
+        self.base.get_source_name()
+    }
 
     fn get_token_factory(&self) -> &'input Self::TF {
         self.base.get_token_factory()
     }
 }
 
+lazy_static! {
+    static ref _ATN: Arc<ATN> =
+        Arc::new(ATNDeserializer::new(None).deserialize(_serializedATN.chars()));
+    static ref _decision_to_DFA: Arc<Vec<antlr_rust::RwLock<DFA>>> = {
+        let mut dfa = Vec::new();
+        let size = _ATN.decision_to_state.len();
+        for i in 0..size {
+            dfa.push(DFA::new(_ATN.clone(), _ATN.get_decision_state(i), i as isize).into())
+        }
+        Arc::new(dfa)
+    };
+}
 
-
-	lazy_static! {
-	    static ref _ATN: Arc<ATN> =
-	        Arc::new(ATNDeserializer::new(None).deserialize(_serializedATN.chars()));
-	    static ref _decision_to_DFA: Arc<Vec<antlr_rust::RwLock<DFA>>> = {
-	        let mut dfa = Vec::new();
-	        let size = _ATN.decision_to_state.len();
-	        for i in 0..size {
-	            dfa.push(DFA::new(
-	                _ATN.clone(),
-	                _ATN.get_decision_state(i),
-	                i as isize,
-	            ).into())
-	        }
-	        Arc::new(dfa)
-	    };
-	}
-
-
-
-	const _serializedATN:&'static str =
-		"\x03\u{608b}\u{a72a}\u{8133}\u{b9ed}\u{417c}\u{3be7}\u{7786}\u{5964}\x02\
+const _serializedATN: &'static str =
+    "\x03\u{608b}\u{a72a}\u{8133}\u{b9ed}\u{417c}\u{3be7}\u{7786}\u{5964}\x02\
 		\x0d\x3e\x08\x01\x04\x02\x09\x02\x04\x03\x09\x03\x04\x04\x09\x04\x04\x05\
 		\x09\x05\x04\x06\x09\x06\x04\x07\x09\x07\x04\x08\x09\x08\x04\x09\x09\x09\
 		\x04\x0a\x09\x0a\x04\x0b\x09\x0b\x04\x0c\x09\x0c\x04\x0d\x09\x0d\x03\x02\
