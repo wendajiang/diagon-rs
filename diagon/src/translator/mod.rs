@@ -1,11 +1,14 @@
 mod antlr;
 mod sequence;
 mod sequence_graph;
+mod table;
 mod tree;
 
+use crate::translator::table::Table;
 use crate::translator::Widget::Combobox;
 use once_cell::sync::{Lazy, OnceCell};
 use std::collections::HashMap;
+use std::hash::{Hash, Hasher};
 use tree::Tree;
 
 #[derive(Debug)]
@@ -23,10 +26,18 @@ impl Default for Widget {
 #[derive(Default, Debug)]
 pub struct OptionDescription {
     name: String,
-    values: Vec<String>,
+    pub values: Vec<&'static str>,
     default_value: String,
     description: String,
     r#type: Widget,
+}
+
+impl Eq for OptionDescription {}
+
+impl PartialEq for OptionDescription {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
+    }
 }
 
 #[derive(Default, Debug)]
@@ -45,8 +56,8 @@ pub trait Translator {
     fn description() -> String {
         String::default()
     }
-    fn options() -> Vec<OptionDescription> {
-        Vec::new()
+    fn options() -> HashMap<&'static str, OptionDescription> {
+        HashMap::new()
     }
     fn examples() -> Vec<Example> {
         Vec::new()
@@ -72,7 +83,7 @@ pub type GlobalHashMap = HashMap<
     String,
     (
         fn(&str, &str) -> String,
-        fn() -> Vec<OptionDescription>,
+        fn() -> HashMap<&'static str, OptionDescription>,
         fn() -> Vec<Example>,
     ),
 >;
@@ -85,6 +96,10 @@ pub static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
     res.insert(
         Tree::identifier(),
         (Tree::translate, Tree::options, Tree::examples),
+    );
+    res.insert(
+        Table::identifier(),
+        (Table::translate, Table::options, Table::examples),
     );
     res
 });

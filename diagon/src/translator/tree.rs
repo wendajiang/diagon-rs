@@ -1,4 +1,5 @@
 use crate::translator::{serialize_option, Example, OptionDescription, Translator};
+use std::collections::HashMap;
 use std::ptr;
 
 struct Node {
@@ -252,23 +253,28 @@ impl Translator for Tree {
     fn description() -> String {
         "Draw a tree".to_string()
     }
-    fn options() -> Vec<OptionDescription> {
-        vec![OptionDescription {
-            name: "style".to_string(),
-            values: vec![
-                "unicode 1".to_string(),
-                "unicode 2".to_string(),
-                "ASCII 1".to_string(),
-                "ASCII 2".to_string(),
-                "ASCII 3".to_string(),
-                "unicode right top".to_string(),
-                "unicode right center".to_string(),
-                "unicode right bottom".to_string(),
-            ],
-            default_value: "unicode 1".to_string(),
-            description: "The style of the tree.".to_string(),
-            r#type: Default::default(),
-        }]
+    fn options() -> HashMap<&'static str, OptionDescription> {
+        vec![(
+            "style",
+            OptionDescription {
+                name: "style".to_string(),
+                values: vec![
+                    "unicode 1",
+                    "unicode 2",
+                    "ASCII 1",
+                    "ASCII 2",
+                    "ASCII 3",
+                    "unicode right top",
+                    "unicode right center",
+                    "unicode right bottom",
+                ],
+                default_value: "unicode 1".to_string(),
+                description: "The style of the tree.".to_string(),
+                r#type: Default::default(),
+            },
+        )]
+        .into_iter()
+        .collect()
     }
     fn examples() -> Vec<Example> {
         vec![Example {

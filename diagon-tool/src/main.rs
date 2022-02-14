@@ -7,7 +7,6 @@ use diagon::translator;
 fn main() {
     // parse args
     let mut args = Args::parse();
-    interactive_args(&mut args);
 
     let maybe_fn = translator::GLOBAL_FN.get(args.component.as_str());
     if maybe_fn.is_none() {
@@ -15,7 +14,9 @@ fn main() {
         return;
     }
 
-    let (translate, _, _) = maybe_fn.unwrap();
+    let (translate, options, _) = maybe_fn.unwrap();
+
+    interactive_args(&mut args, options);
 
     let output = translate(args.content.as_str(), args.options.as_str());
 

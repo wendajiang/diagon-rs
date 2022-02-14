@@ -1,7 +1,7 @@
 use crate::screen::Screen;
 use crate::translator::{Example, OptionDescription, Translator, Widget};
 use std::cmp::Ordering;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 enum Direction {
     Left,
@@ -201,14 +201,19 @@ impl Translator for Sequence {
     fn description() -> String {
         "Draw sequence diagram".to_string()
     }
-    fn options() -> Vec<OptionDescription> {
-        vec![OptionDescription {
-            name: "ascii_only".to_string(),
-            values: vec!["false".to_string(), "true".to_string()],
-            default_value: "false".to_string(),
-            description: "Use the full unicode charset or only ASCII".to_string(),
-            r#type: Widget::CheckBox,
-        }]
+    fn options() -> HashMap<&'static str, OptionDescription> {
+        vec![(
+            "ascii_only",
+            OptionDescription {
+                name: "ascii_only".to_string(),
+                values: vec!["false", "true"],
+                default_value: "false".to_string(),
+                description: "Use the full unicode charset or only ASCII".to_string(),
+                r#type: Widget::CheckBox,
+            },
+        )]
+        .into_iter()
+        .collect()
     }
     fn examples() -> Vec<Example> {
         vec![

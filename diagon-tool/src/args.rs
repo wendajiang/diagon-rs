@@ -1,6 +1,8 @@
 use clap::Parser;
+use diagon::translator::OptionDescription;
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
+use std::collections::HashMap;
 
 // todo subcommand pattern, e.g. diagon-rs Tree --examples --options
 #[derive(Parser, Debug)]
@@ -8,7 +10,7 @@ use dialoguer::Select;
 pub struct Args {
     #[clap(long = "command",
     possible_values =
-    ["Tree"])]
+    ["Tree", "Table"])]
     pub component: String,
 
     #[clap(long)]
@@ -21,23 +23,22 @@ pub struct Args {
     pub interaction: bool,
 }
 
-pub fn interactive_args(args: &mut Args) {
+pub fn interactive_args(
+    args: &mut Args,
+    options: &fn() -> HashMap<&'static str, OptionDescription>,
+) {
+    let mp: HashMap<&'static str, OptionDescription> = options();
+    let option_style = if let Some(opt) = mp.get("style") {
+        opt.values.clone()
+    } else {
+        Vec::new()
+    };
     if args.interaction {
-        let select_style = vec![
-            "unicode 1",
-            "unicode 2",
-            "ASCII 1",
-            "ASCII 2",
-            "ASCII 3",
-            "unicode right top",
-            "unicode right center",
-            "unicode right bottom",
-        ];
         let selected_style = Select::with_theme(&ColorfulTheme::default())
             .with_prompt("Pick your style")
-            .items(&select_style)
+            .items(&option_style)
             .default(0)
             .interact();
-        args.options = "style\n".to_string() + select_style[selected_style.unwrap_or_default()];
+        args.options = "style\n".to_string() + option_style[selected_style.unwrap_or_default()];
     }
 }
