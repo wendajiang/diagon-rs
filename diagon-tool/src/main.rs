@@ -14,9 +14,9 @@ fn main() {
         return;
     }
 
-    let (translate, options, _) = maybe_fn.unwrap();
+    let (translate, options, examples) = maybe_fn.unwrap();
 
-    interactive_args(&mut args, options);
+    interactive_args(&mut args, options, examples);
 
     let output = translate(args.content.as_str(), args.options.as_str());
 

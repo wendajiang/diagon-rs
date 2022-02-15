@@ -9,9 +9,9 @@ We also expose a command line interface, for personal and 3rd party tools.
 
 # Support Subcommand
 - [x] tree
-- [ ] table (doing)
+- [x] table
 - [ ] math (todo)
-- [ ] sequence (todo)
+- [ ] sequence (doing)
 - [ ] frame (todo)
 - [ ] graph_dag (todo)
 - [ ] graph_planar (todo)

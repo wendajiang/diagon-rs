@@ -1,5 +1,5 @@
 use clap::Parser;
-use diagon::translator::OptionDescription;
+use diagon::translator::{Example, OptionDescription};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 use std::collections::HashMap;
@@ -13,10 +13,10 @@ pub struct Args {
     ["Tree", "Table"])]
     pub component: String,
 
-    #[clap(long)]
+    #[clap(long, default_value = "")]
     pub content: String,
 
-    #[clap(long, default_value = "style\nunicode 1")]
+    #[clap(long, default_value = "")]
     pub options: String,
 
     #[clap(long, short)]
@@ -26,6 +26,7 @@ pub struct Args {
 pub fn interactive_args(
     args: &mut Args,
     options: &fn() -> HashMap<&'static str, OptionDescription>,
+    examples: &fn() -> Vec<Example>,
 ) {
     let mp: HashMap<&'static str, OptionDescription> = options();
     let option_style = if let Some(opt) = mp.get("style") {
@@ -33,6 +34,15 @@ pub fn interactive_args(
     } else {
         Vec::new()
     };
+
+    // set default content
+    let example: Vec<Example> = examples();
+    let example = &example[0];
+
+    if args.content.is_empty() {
+        args.content = example.input.clone();
+    }
+
     if args.interaction {
         let selected_style = Select::with_theme(&ColorfulTheme::default())
             .with_prompt("Pick your style")

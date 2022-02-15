@@ -42,8 +42,8 @@ impl PartialEq for OptionDescription {
 
 #[derive(Default, Debug)]
 pub struct Example {
-    title: String,
-    input: String,
+    pub title: String,
+    pub input: String,
 }
 
 pub trait Translator {
