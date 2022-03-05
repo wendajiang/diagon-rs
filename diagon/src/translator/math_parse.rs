@@ -120,8 +120,7 @@ fn parse_factor(
                 parse_value_bang(context.valueBang(1).unwrap(), style, false),
                 parse_value_bang(context.valueBang(2).unwrap(), style, false),
             );
-        }
-        if context.powop(1).unwrap().POW().is_some()
+        } else if context.powop(1).unwrap().POW().is_some()
             && context.powop(0).unwrap().SUBSCRIPT().is_some()
         {
             return compose_diagonal_up_and_down(
@@ -329,13 +328,13 @@ fn parse_function(context: Rc<FunctionContextAll>, style: &MathStyle) -> MathDra
     if let Some(f) = context.variable() {
         if let Some(t) = f.VARIABLE() {
             let func_name = t.get_text();
-            if func_name == "sqrt".to_string() {
+            if func_name == *"sqrt" {
                 parse_func_sqrt(context, style)
-            } else if func_name == "sum".to_string() {
+            } else if func_name == *"sum" {
                 parse_func_sum(context, style)
-            } else if func_name == "int".to_string() {
+            } else if func_name == *"int" {
                 parse_func_int(context, style)
-            } else if func_name == "mult".to_string() {
+            } else if func_name == *"mult" {
                 parse_func_mult(context, style)
             } else {
                 parse_func_common(context, style)
@@ -350,7 +349,7 @@ fn parse_function(context: Rc<FunctionContextAll>, style: &MathStyle) -> MathDra
 }
 
 fn parse_string(node: Rc<TerminalNode<mathParserContextType>>) -> MathDraw {
-    let a = node.get_text().to_string();
+    let a = node.get_text();
     MathDraw::new((&a[1..a.len() - 2]).to_string())
 }
 
@@ -375,6 +374,6 @@ fn parse_variable(context: Rc<VariableContextAll>, style: &MathStyle) -> MathDra
             .variable_transform
             .get(key.as_str())
             .and_then(|v| Option::from(v.to_string()))
-            .unwrap_or_else(|| key),
+            .unwrap_or(key),
     )
 }
