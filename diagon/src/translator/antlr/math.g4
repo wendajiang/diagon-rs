@@ -32,8 +32,6 @@
 
 grammar math;
 
-multilineEquation: equation (newlines equation)* EOL? EOF;
-newlines: EOL+;
 equation: expression (relop expression)*;
 expression: term (addop term)*;
 term: factor (mulop factor)*;
