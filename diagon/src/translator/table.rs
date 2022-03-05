@@ -374,7 +374,7 @@ Javascript,CSS,HTML".to_string(),
         }
 
         // compute sum_row_width
-        let column_width_global = column_width.iter().fold(0, |acc, x| acc + x);
+        let column_width_global: usize = column_width.iter().sum();
 
         // compute screen dimension
         let width = style.width[0]
