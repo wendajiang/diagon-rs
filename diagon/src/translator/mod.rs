@@ -1,5 +1,6 @@
 mod antlr;
 mod math;
+mod math_parse;
 mod sequence;
 mod sequence_graph;
 mod table;
@@ -7,6 +8,8 @@ mod tree;
 
 use crate::translator::table::Table;
 use crate::translator::Widget::Combobox;
+use math::Draw as MathDraw;
+use math::Style as MathStyle;
 use once_cell::sync::{Lazy, OnceCell};
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
@@ -78,12 +81,12 @@ pub trait Translator {
     }
 }
 
-pub fn serialize_option(options: &str) -> HashMap<String, String> {
+pub fn serialize_option(options: &str) -> HashMap<&str, &str> {
     let mut lines_iter = options.lines();
     let mut res = HashMap::new();
     while let Some(label) = lines_iter.next() {
         if let Some(value) = lines_iter.next() {
-            res.insert(label.trim_end().to_string(), value.trim_end().to_string());
+            res.insert(label.trim_end(), value.trim_end());
         }
     }
     res

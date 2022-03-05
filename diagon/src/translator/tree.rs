@@ -314,9 +314,9 @@ r"Linux
     ///
     fn translate(input: &str, input_options: &str) -> String {
         let options = serialize_option(input_options);
-        let default_style = "unicode 1".to_string();
+        let default_style = "unicode 1";
 
-        let style_option = options.get("style").unwrap_or(&default_style);
+        let style_option = options.get("style").cloned().unwrap_or(default_style);
 
         // parse input string
         let mut print_lines: Vec<Line> = Vec::new();
@@ -364,7 +364,7 @@ r"Linux
             }
         }
 
-        match style_option.as_str() {
+        match style_option {
             "unicode 1" => print_tree_by_print_style(PrintStyle::Unicode1, tree),
             "unicode 2" => print_tree_by_print_style(PrintStyle::Unicode2, tree),
             "ASCII 1" => print_tree_by_print_style(PrintStyle::ASCII1, tree),

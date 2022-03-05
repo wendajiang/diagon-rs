@@ -329,9 +329,9 @@ Javascript,CSS,HTML".to_string(),
         let style_option = if let Some(str) = options.get("style") {
             str.clone()
         } else {
-            String::from("unicode")
+            "unicode"
         };
-        let style = if let Some(st) = STYLES.get(style_option.as_str()) {
+        let style = if let Some(st) = STYLES.get(style_option) {
             st.clone()
         } else {
             Style::default()
@@ -341,17 +341,13 @@ Javascript,CSS,HTML".to_string(),
         let separator = if let Some(sep) = options.get("separator") {
             sep.clone()
         } else {
-            ",".to_string()
+            ","
         };
 
         // Parse data.
         let mut data: Vec<Vec<String>> = input
             .lines()
-            .map(|line| {
-                line.split(separator.as_str())
-                    .map(|str| str.to_string())
-                    .collect()
-            })
+            .map(|line| line.split(separator).map(|str| str.to_string()).collect())
             .collect();
 
         // Compute row/line count
