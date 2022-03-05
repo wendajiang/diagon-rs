@@ -5,6 +5,28 @@ use antlr_rust::tree::ParseTreeListener;
 
 pub trait mathListener<'input>: ParseTreeListener<'input, mathParserContextType> {
     /**
+     * Enter a parse tree produced by {@link mathParser#multilineEquation}.
+     * @param ctx the parse tree
+     */
+    fn enter_multilineEquation(&mut self, _ctx: &MultilineEquationContext<'input>) {}
+    /**
+     * Exit a parse tree produced by {@link mathParser#multilineEquation}.
+     * @param ctx the parse tree
+     */
+    fn exit_multilineEquation(&mut self, _ctx: &MultilineEquationContext<'input>) {}
+
+    /**
+     * Enter a parse tree produced by {@link mathParser#newlines}.
+     * @param ctx the parse tree
+     */
+    fn enter_newlines(&mut self, _ctx: &NewlinesContext<'input>) {}
+    /**
+     * Exit a parse tree produced by {@link mathParser#newlines}.
+     * @param ctx the parse tree
+     */
+    fn exit_newlines(&mut self, _ctx: &NewlinesContext<'input>) {}
+
+    /**
      * Enter a parse tree produced by {@link mathParser#equation}.
      * @param ctx the parse tree
      */
