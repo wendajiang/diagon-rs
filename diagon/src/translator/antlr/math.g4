@@ -26,8 +26,8 @@
 /*
  BSD License (Same license)
  
- Copyright (c) 2018 Arthur Sonzogni This file is a modified version taken from:
- https://github.com/antlr/grammars-v4e/blob/master/arithmetic/arithmetic.g4
+ Copyright (c) 2022 David This file is a modified version taken from:
+ https://github.com/antlr/grammars-v4/blob/master/arithmetic/arithmetic.g4
  */
 
 grammar math;
