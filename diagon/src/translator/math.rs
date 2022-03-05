@@ -1,13 +1,5 @@
-use crate::translator::antlr::{
-    mathLexer, mathParser, mathParserContextType, AddopContextAll, AddopContextAttrs,
-    AtomContextAll, AtomContextAttrs, EquationContextAll, EquationContextAttrs,
-    ExpressionContextAll, ExpressionContextAttrs, FactorContextAll, FactorContextAttrs,
-    FunctionContextAll, FunctionContextAttrs, MulopContextAttrs, MultilineEquationContext,
-    MultilineEquationContextAttrs, NewlinesContextAll, NewlinesContextAttrs, PowopContextAll,
-    PowopContextAttrs, RelopContextAttrs, TermContextAll, TermContextAttrs, ValueBangContextAll,
-    ValueBangContextAttrs, ValueContextAll, ValueContextAttrs, VariableContextAll,
-    VariableContextAttrs,
-};
+use crate::translator::antlr::{mathLexer, mathParser};
+use crate::translator::math_latex::parse_latex;
 use crate::translator::math_parse::parse;
 use crate::translator::{serialize_option, Example, OptionDescription, Translator, Widget};
 use antlr_rust::common_token_stream::CommonTokenStream;
@@ -48,8 +40,7 @@ impl Draw {
             let one_line: Vec<char> = content.chars().into_iter().collect();
             let dim_x = one_line.len();
             let dim_y = 1;
-            let mut res = Vec::new();
-            res.push(one_line);
+            let res = vec![(one_line)];
             let center_x = dim_x / 2;
             let center_y = 0;
             Self {
@@ -497,8 +488,4 @@ xi + Tau + tau + Omega + omega",
             parse(context, &style)
         }
     }
-}
-
-fn parse_latex(context: Rc<MultilineEquationContext>, style: &Style) -> String {
-    todo!()
 }

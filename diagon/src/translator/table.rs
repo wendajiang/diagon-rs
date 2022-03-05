@@ -327,7 +327,7 @@ Javascript,CSS,HTML".to_string(),
 
         // Style
         let style_option = if let Some(str) = options.get("style") {
-            str.clone()
+            str
         } else {
             "unicode"
         };
@@ -339,7 +339,7 @@ Javascript,CSS,HTML".to_string(),
 
         // Separator.
         let separator = if let Some(sep) = options.get("separator") {
-            sep.clone()
+            sep
         } else {
             ","
         };

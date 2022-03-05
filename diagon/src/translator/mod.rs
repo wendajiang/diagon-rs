@@ -1,5 +1,6 @@
 mod antlr;
 mod math;
+mod math_latex;
 mod math_parse;
 mod sequence;
 mod sequence_graph;
