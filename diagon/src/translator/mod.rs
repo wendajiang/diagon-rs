@@ -1,4 +1,5 @@
 mod antlr;
+mod math;
 mod sequence;
 mod sequence_graph;
 mod table;
@@ -44,6 +45,15 @@ impl PartialEq for OptionDescription {
 pub struct Example {
     pub title: String,
     pub input: String,
+}
+
+impl From<(&str, &str)> for Example {
+    fn from(input: (&str, &str)) -> Self {
+        Self {
+            title: input.0.to_string(),
+            input: input.1.to_string(),
+        }
+    }
 }
 
 pub trait Translator {
