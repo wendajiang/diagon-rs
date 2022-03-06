@@ -2,7 +2,6 @@ use clap::Parser;
 use diagon::translator::{Example, OptionDescription};
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
-use std::collections::HashMap;
 
 // todo subcommand pattern, e.g. diagon-rs Tree --examples --options
 #[derive(Parser, Debug)]
@@ -25,22 +24,18 @@ pub struct Args {
 
 pub fn interactive_args(
     args: &mut Args,
-    options: &fn() -> HashMap<&'static str, OptionDescription>,
+    options: &fn() -> Vec<OptionDescription>,
     examples: &fn() -> Vec<Example>,
 ) {
-    let mp: HashMap<&'static str, OptionDescription> = options();
-    let option_style = if let Some(opt) = mp.get("style") {
-        opt.values.clone()
-    } else {
-        Vec::new()
-    };
-
     // set default content
     let examples: Vec<Example> = examples();
-    let example = &examples[0];
+    let options: Vec<OptionDescription> = options();
 
-    if args.content.is_empty() {
-        args.content = example.input.clone();
+    let mut option_style = "";
+    for op in &options {
+        if op.name == *"style" {
+            option_style = op.values[0];
+        }
     }
 
     if args.interaction {
@@ -53,11 +48,26 @@ pub fn interactive_args(
             .input
             .clone();
 
-        let selected_style = Select::with_theme(&ColorfulTheme::default())
-            .with_prompt("Pick your style")
-            .items(&option_style)
-            .default(0)
-            .interact();
-        args.options = "style\n".to_string() + option_style[selected_style.unwrap_or_default()];
+        for option in options {
+            let selected_option = Select::with_theme(&ColorfulTheme::default())
+                .with_prompt(format!("Pick your {}", option.name))
+                .items(&option.values)
+                .default(0)
+                .interact();
+            args.options +=
+                (option.name + "\n" + option.values[selected_option.unwrap_or_default()] + "\n")
+                    .as_str();
+        }
+        args.options.pop();
+    } else {
+        let example = &examples[0];
+
+        if args.content.is_empty() {
+            args.content = example.input.clone();
+        }
+
+        if args.options.is_empty() {
+            args.options = "style\n".to_string() + option_style;
+        }
     }
 }

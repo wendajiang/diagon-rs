@@ -201,19 +201,14 @@ impl Translator for Sequence {
     fn description() -> String {
         "Draw sequence diagram".to_string()
     }
-    fn options() -> HashMap<&'static str, OptionDescription> {
-        vec![(
-            "ascii_only",
-            OptionDescription {
-                name: "ascii_only".to_string(),
-                values: vec!["false", "true"],
-                default_value: "false".to_string(),
-                description: "Use the full unicode charset or only ASCII".to_string(),
-                r#type: Widget::CheckBox,
-            },
-        )]
-        .into_iter()
-        .collect()
+    fn options() -> Vec<OptionDescription> {
+        vec![OptionDescription {
+            name: "ascii_only".to_string(),
+            values: vec!["false", "true"],
+            default_value: "false".to_string(),
+            description: "Use the full unicode charset or only ASCII".to_string(),
+            r#type: Widget::CheckBox,
+        }]
     }
     fn examples() -> Vec<Example> {
         vec![

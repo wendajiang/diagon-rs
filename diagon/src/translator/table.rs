@@ -280,38 +280,33 @@ impl Translator for Table {
     fn description() -> String {
         "Draw table".to_string()
     }
-    fn options() -> HashMap<&'static str, OptionDescription> {
-        vec![(
-            "style",
-            OptionDescription {
-                name: "style".to_string(),
-                values: vec![
-                    "unicode",
-                    "unicode rounded",
-                    "unicode bold",
-                    "unicode double",
-                    "unicode with bold header",
-                    "unicode with double header",
-                    "unicode cells",
-                    "unicode cells 2",
-                    "ascii",
-                    "ascii rounded",
-                    "ascii with header 1",
-                    "ascii with header 2",
-                    "ascii light header",
-                    "ascii light header/separator",
-                    "ascii light header/separator/border",
-                    "ascii light separator/border",
-                    "ascii light border",
-                    "conceptual",
-                ],
-                default_value: "unicode".to_string(),
-                description: "The style of the table.".to_string(),
-                r#type: Widget::Combobox,
-            },
-        )]
-        .into_iter()
-        .collect()
+    fn options() -> Vec<OptionDescription> {
+        vec![OptionDescription {
+            name: "style".to_string(),
+            values: vec![
+                "unicode",
+                "unicode rounded",
+                "unicode bold",
+                "unicode double",
+                "unicode with bold header",
+                "unicode with double header",
+                "unicode cells",
+                "unicode cells 2",
+                "ascii",
+                "ascii rounded",
+                "ascii with header 1",
+                "ascii with header 2",
+                "ascii light header",
+                "ascii light header/separator",
+                "ascii light header/separator/border",
+                "ascii light separator/border",
+                "ascii light border",
+                "conceptual",
+            ],
+            default_value: "unicode".to_string(),
+            description: "The style of the table.".to_string(),
+            r#type: Widget::Combobox,
+        }]
     }
     fn examples() -> Vec<Example> {
         vec![Example {

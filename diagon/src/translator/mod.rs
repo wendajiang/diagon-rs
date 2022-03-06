@@ -19,7 +19,7 @@ use std::hash::{Hash, Hasher};
 use tree::Tree;
 
 #[derive(Debug)]
-enum Widget {
+pub enum Widget {
     Combobox,
     CheckBox,
 }
@@ -32,11 +32,17 @@ impl Default for Widget {
 
 #[derive(Default, Debug)]
 pub struct OptionDescription {
-    name: String,
+    pub name: String,
     pub values: Vec<&'static str>,
-    default_value: String,
-    description: String,
-    r#type: Widget,
+    pub default_value: String,
+    pub description: String,
+    pub r#type: Widget,
+}
+
+impl Display for OptionDescription {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 impl Eq for OptionDescription {}
@@ -78,8 +84,8 @@ pub trait Translator {
     fn description() -> String {
         String::default()
     }
-    fn options() -> HashMap<&'static str, OptionDescription> {
-        HashMap::new()
+    fn options() -> Vec<OptionDescription> {
+        Vec::new()
     }
     fn examples() -> Vec<Example> {
         Vec::new()
@@ -105,7 +111,7 @@ pub type GlobalHashMap = HashMap<
     String,
     (
         fn(&str, &str) -> String,
-        fn() -> HashMap<&'static str, OptionDescription>,
+        fn() -> Vec<OptionDescription>,
         fn() -> Vec<Example>,
     ),
 >;

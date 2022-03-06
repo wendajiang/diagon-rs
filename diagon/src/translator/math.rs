@@ -397,33 +397,25 @@ impl Translator for Math {
     fn description() -> String {
         "Math description".to_string()
     }
-    fn options() -> HashMap<&'static str, OptionDescription> {
+    fn options() -> Vec<OptionDescription> {
         vec![
-            (
-                "style",
-                OptionDescription {
-                    name: "style".to_string(),
-                    values: vec!["Unicode", "ASCII", "Latex"],
-                    default_value: "Unicode".to_string(),
-                    description: "Use the full unicode charset or only ASCII. Or even latex."
-                        .to_string(),
-                    r#type: Widget::Combobox,
-                },
-            ),
-            (
-                "transform_math_letters",
-                OptionDescription {
-                    name: "transform_math_letters".to_string(),
-                    values: vec!["false", "true"],
-                    default_value: "true".to_string(),
-                    description: "Transform letter name into their unicode glyph. alpha -> α."
-                        .to_string(),
-                    r#type: Widget::CheckBox,
-                },
-            ),
+            OptionDescription {
+                name: "style".to_string(),
+                values: vec!["Unicode", "ASCII", "Latex"],
+                default_value: "Unicode".to_string(),
+                description: "Use the full unicode charset or only ASCII. Or even latex."
+                    .to_string(),
+                r#type: Widget::Combobox,
+            },
+            OptionDescription {
+                name: "transform_math_letters".to_string(),
+                values: vec!["false", "true"],
+                default_value: "true".to_string(),
+                description: "Transform letter name into their unicode glyph. alpha -> α."
+                    .to_string(),
+                r#type: Widget::CheckBox,
+            },
         ]
-        .into_iter()
-        .collect()
     }
     fn examples() -> Vec<Example> {
         vec![
