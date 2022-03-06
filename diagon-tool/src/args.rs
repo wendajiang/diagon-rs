@@ -36,14 +36,23 @@ pub fn interactive_args(
     };
 
     // set default content
-    let example: Vec<Example> = examples();
-    let example = &example[0];
+    let examples: Vec<Example> = examples();
+    let example = &examples[0];
 
     if args.content.is_empty() {
         args.content = example.input.clone();
     }
 
     if args.interaction {
+        let selected_examples = Select::with_theme(&ColorfulTheme::default())
+            .with_prompt("Pick your example")
+            .items(examples.as_slice())
+            .default(0)
+            .interact();
+        args.content = examples[selected_examples.unwrap_or_default()]
+            .input
+            .clone();
+
         let selected_style = Select::with_theme(&ColorfulTheme::default())
             .with_prompt("Pick your style")
             .items(&option_style)
