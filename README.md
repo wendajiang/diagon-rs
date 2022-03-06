@@ -10,7 +10,7 @@ We also expose a command line interface, for personal and 3rd party tools.
 # Support Subcommand
 - [x] tree
 - [x] table
-- [ ] math (todo)
+- [x] math (Latex todo)
 - [ ] sequence (doing)
 - [ ] frame (todo)
 - [ ] graph_dag (todo)
