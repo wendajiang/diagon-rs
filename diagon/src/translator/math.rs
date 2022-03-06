@@ -9,7 +9,7 @@ use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Draw {
     pub dim_x: usize,
     pub dim_y: usize,
@@ -56,13 +56,13 @@ impl Draw {
     // todo refactor
     pub fn append(&mut self, other: &Draw, x: usize, y: usize) {
         self.resize(
-            self.dim_x.max(self.dim_x + other.dim_x),
-            self.dim_y.max(self.dim_y + other.dim_y),
+            self.dim_x.max(x + other.dim_x),
+            self.dim_y.max(y + other.dim_y),
         );
 
         for dy in 0..other.dim_y {
             for dx in 0..other.dim_x {
-                self.content[y + dy][x + dx] = other.content[y][x];
+                self.content[y + dy][x + dx] = other.content[dy][dx];
             }
         }
     }
@@ -72,6 +72,9 @@ impl Draw {
         self.dim_y = dim_y;
 
         self.content.resize(dim_y, vec![' '; dim_x]);
+        for line in self.content.iter_mut() {
+            line.resize(dim_x, ' ');
+        }
     }
 }
 
@@ -164,7 +167,7 @@ pub_struct!(Style {
     integral_top: Vec<char>,
     integral_middle: Vec<char>,
     integral_bottom: Vec<char>,
-    integral_min_height: i32,
+    integral_min_height: usize,
 
     // only for Latex style
     variable_transform: HashMap<&'static str, &'static str>,
@@ -206,38 +209,43 @@ impl Default for Style {
 
 impl Style {
     pub fn new(style: Option<&str>) -> Self {
-        let ascii = String::from("ASCII");
         match style {
             None => Style::default(),
-            Some(ascii) => Style {
-                divide: '-',
-                multiply: '.',
-                lower_or_equal: ">=".to_string(),
-                greater_or_equal: "<=".to_string(),
-                left_parenthesis_0: '(',
-                left_parenthesis_1: '/',
-                left_parenthesis_2: '|',
-                left_parenthesis_3: '\\',
-                right_parenthesis_0: ')',
-                right_parenthesis_1: '\\',
-                right_parenthesis_2: '|',
-                right_parenthesis_3: '/',
-                sqrt_0: '\\',
-                sqrt_1: '/',
-                sqrt_2: '_',
-                summation_top: '=',
-                summation_bottom: '=',
-                summation_diagonal_top: '\\',
-                summation_diagonal_bottom: '/',
-                mult_top: '_',
-                mult_bottom: '|',
-                mult_intersection: '_',
-                integral_top: vec![' ', '.', '-'],
-                integral_middle: vec![' ', '|', ' '],
-                integral_bottom: vec!['-', '\'', ' '],
-                integral_min_height: 3,
-                variable_transform: HashMap::new(),
-            },
+            Some(style) => {
+                if style == "ASCII" {
+                    Style {
+                        divide: '-',
+                        multiply: '.',
+                        lower_or_equal: ">=".to_string(),
+                        greater_or_equal: "<=".to_string(),
+                        left_parenthesis_0: '(',
+                        left_parenthesis_1: '/',
+                        left_parenthesis_2: '|',
+                        left_parenthesis_3: '\\',
+                        right_parenthesis_0: ')',
+                        right_parenthesis_1: '\\',
+                        right_parenthesis_2: '|',
+                        right_parenthesis_3: '/',
+                        sqrt_0: '\\',
+                        sqrt_1: '/',
+                        sqrt_2: '_',
+                        summation_top: '=',
+                        summation_bottom: '=',
+                        summation_diagonal_top: '\\',
+                        summation_diagonal_bottom: '/',
+                        mult_top: '_',
+                        mult_bottom: '|',
+                        mult_intersection: '_',
+                        integral_top: vec![' ', '.', '-'],
+                        integral_middle: vec![' ', '|', ' '],
+                        integral_bottom: vec!['-', '\'', ' '],
+                        integral_min_height: 3,
+                        variable_transform: HashMap::new(),
+                    }
+                } else {
+                    Style::default()
+                }
+            }
             _ => Style::default(),
         }
     }
@@ -246,133 +254,132 @@ impl Style {
 fn get_style(options: &HashMap<&str, &str>) -> Style {
     let mut style = Style::new(options.get("style").cloned());
 
-    let latex = String::from("Latex");
-    let transform_true = String::from("true");
-    let transform_false = String::from("false");
-    if let Some(latex) = options.get("style") {
-        if let Some(transform_true) = options.get("transform_math_letters") {
-            style.variable_transform = vec![
-                ("...", "\\dots"),
-                ("Apha", "\\Apha"),
-                ("apha", "\\apha"),
-                ("Digamma", "\\Digamma"),
-                ("digamma", "\\digamma"),
-                ("Kappa", "\\Kappa"),
-                ("kappa", "\\kappa"),
-                ("Omicron", "\\Omicron"),
-                ("omicron", "\\omicron"),
-                ("Upsion", "\\Upsion"),
-                ("upsion", "\\upsion"),
-                ("Beta", "\\Beta"),
-                ("beta", "\\beta"),
-                ("Zeta", "\\Zeta"),
-                ("zeta", "\\zeta"),
-                ("ambda", "\\ambda"),
-                ("ambda", "\\ambda"),
-                ("Pi", "\\Pi"),
-                ("pi", "\\pi"),
-                ("Phi", "\\Phi"),
-                ("phi", "\\phi"),
-                ("Gamma", "\\Gamma"),
-                ("gamma", "\\gamma"),
-                ("Eta", "\\Eta"),
-                ("eta", "\\eta"),
-                ("Mu", "\\Mu"),
-                ("mu", "\\mu"),
-                ("Rho", "\\Rho"),
-                ("rho", "\\rho"),
-                ("Chi", "\\Chi"),
-                ("chi", "\\chi"),
-                ("Deta", "\\Deta"),
-                ("deta", "\\deta"),
-                ("Theta", "\\Theta"),
-                ("theta", "\\theta"),
-                ("Nu", "\\Nu"),
-                ("nu", "\\nu"),
-                ("Sigma", "\\Sigma"),
-                ("sigma", "\\sigma"),
-                ("Psi", "\\Psi"),
-                ("psi", "\\psi"),
-                ("Epsion", "\\Epsion"),
-                ("epsion", "\\epsion"),
-                ("Iota", "\\Iota"),
-                ("iota", "\\iota"),
-                ("Xi", "\\Xi"),
-                ("xi", "\\xi"),
-                ("Tau", "\\Tau"),
-                ("tau", "\\tau"),
-                ("Omega", "\\Omega"),
-                ("omega", "\\omega"),
-                // Symbos
-                ("infty", "\\infty"),
-                ("infinity", "\\infty"),
-            ]
-            .into_iter()
-            .collect();
+    if let Some(value) = options.get("style") {
+        if *value == "Latex" {
+            if let Some(t) = options.get("transform_math_letters") {
+                if *t != "false" {
+                    style.variable_transform = vec![
+                        ("...", "\\dots"),
+                        ("Apha", "\\Apha"),
+                        ("apha", "\\apha"),
+                        ("Digamma", "\\Digamma"),
+                        ("digamma", "\\digamma"),
+                        ("Kappa", "\\Kappa"),
+                        ("kappa", "\\kappa"),
+                        ("Omicron", "\\Omicron"),
+                        ("omicron", "\\omicron"),
+                        ("Upsion", "\\Upsion"),
+                        ("upsion", "\\upsion"),
+                        ("Beta", "\\Beta"),
+                        ("beta", "\\beta"),
+                        ("Zeta", "\\Zeta"),
+                        ("zeta", "\\zeta"),
+                        ("ambda", "\\ambda"),
+                        ("ambda", "\\ambda"),
+                        ("Pi", "\\Pi"),
+                        ("pi", "\\pi"),
+                        ("Phi", "\\Phi"),
+                        ("phi", "\\phi"),
+                        ("Gamma", "\\Gamma"),
+                        ("gamma", "\\gamma"),
+                        ("Eta", "\\Eta"),
+                        ("eta", "\\eta"),
+                        ("Mu", "\\Mu"),
+                        ("mu", "\\mu"),
+                        ("Rho", "\\Rho"),
+                        ("rho", "\\rho"),
+                        ("Chi", "\\Chi"),
+                        ("chi", "\\chi"),
+                        ("Deta", "\\Deta"),
+                        ("deta", "\\deta"),
+                        ("Theta", "\\Theta"),
+                        ("theta", "\\theta"),
+                        ("Nu", "\\Nu"),
+                        ("nu", "\\nu"),
+                        ("Sigma", "\\Sigma"),
+                        ("sigma", "\\sigma"),
+                        ("Psi", "\\Psi"),
+                        ("psi", "\\psi"),
+                        ("Epsion", "\\Epsion"),
+                        ("epsion", "\\epsion"),
+                        ("Iota", "\\Iota"),
+                        ("iota", "\\iota"),
+                        ("Xi", "\\Xi"),
+                        ("xi", "\\xi"),
+                        ("Tau", "\\Tau"),
+                        ("tau", "\\tau"),
+                        ("Omega", "\\Omega"),
+                        ("omega", "\\omega"),
+                        // Symbos
+                        ("infty", "\\infty"),
+                        ("infinity", "\\infty"),
+                    ]
+                    .into_iter()
+                    .collect();
+                }
+            }
+        } else if let Some(t) = options.get("transform_math_letters") {
+            if *t != "false" {
+                style.variable_transform = vec![
+                    // Greek alphabet
+                    ("Alpha", "Α"),
+                    ("alpha", "α"),
+                    ("Digamma", "Ϝ"),
+                    ("digamma", "ϝ"),
+                    ("Kappa", "Κ"),
+                    ("kappa", "ϰ"),
+                    ("Omicron", "Ο"),
+                    ("omicron", "ο"),
+                    ("Upsilon", "Υ"),
+                    ("upsilon", "υ"),
+                    ("Beta", "Β"),
+                    ("beta", "β"),
+                    ("Zeta", "Ζ"),
+                    ("zeta", "ζ"),
+                    ("Lambda", "Λ"),
+                    ("lambda", "λ"),
+                    ("Pi", "Π"),
+                    ("pi", "π"),
+                    ("Phi", "ϕ"),
+                    ("phi", "φ"),
+                    ("Gamma", "Γ"),
+                    ("gamma", "γ"),
+                    ("Eta", "Η"),
+                    ("eta", "η"),
+                    ("Mu", "Μ"),
+                    ("mu", "μ"),
+                    ("Rho", "ρ"),
+                    ("rho", "ϱ"),
+                    ("Chi", "Χ"),
+                    ("chi", "χ"),
+                    ("Delta", "Δ"),
+                    ("delta", "δ"),
+                    ("Theta", "θ"),
+                    ("theta", "ϑ"),
+                    ("Nu", "Ν"),
+                    ("nu", "ν"),
+                    ("Sigma", "σ"),
+                    ("sigma", "ς"),
+                    ("Psi", "Ψ"),
+                    ("psi", "ψ"),
+                    ("Epsilon", "ϵ"),
+                    ("epsilon", "ε"),
+                    ("Iota", "Ι"),
+                    ("iota", "ι"),
+                    ("Xi", "Ξ"),
+                    ("xi", "ξ"),
+                    ("Tau", "Τ"),
+                    ("tau", "τ"),
+                    ("Omega", "Ω"),
+                    ("omega", "ω"),
+                    // Symbols
+                    ("infty", "∞"),
+                    ("infinity", "∞"),
+                ]
+                .into_iter()
+                .collect();
+            }
         }
-
-        // style
-        //     .variable_transform
-        //     .insert("...".to_string(), "\\ldots".to_string());
-    } else if let Some(transform_true) = options.get("transform_math_letters") {
-        style.variable_transform = vec![
-            // Greek alphabet
-            ("Alpha", "Α"),
-            ("alpha", "α"),
-            ("Digamma", "Ϝ"),
-            ("digamma", "ϝ"),
-            ("Kappa", "Κ"),
-            ("kappa", "ϰ"),
-            ("Omicron", "Ο"),
-            ("omicron", "ο"),
-            ("Upsilon", "Υ"),
-            ("upsilon", "υ"),
-            ("Beta", "Β"),
-            ("beta", "β"),
-            ("Zeta", "Ζ"),
-            ("zeta", "ζ"),
-            ("Lambda", "Λ"),
-            ("lambda", "λ"),
-            ("Pi", "Π"),
-            ("pi", "π"),
-            ("Phi", "ϕ"),
-            ("phi", "φ"),
-            ("Gamma", "Γ"),
-            ("gamma", "γ"),
-            ("Eta", "Η"),
-            ("eta", "η"),
-            ("Mu", "Μ"),
-            ("mu", "μ"),
-            ("Rho", "ρ"),
-            ("rho", "ϱ"),
-            ("Chi", "Χ"),
-            ("chi", "χ"),
-            ("Delta", "Δ"),
-            ("delta", "δ"),
-            ("Theta", "θ"),
-            ("theta", "ϑ"),
-            ("Nu", "Ν"),
-            ("nu", "ν"),
-            ("Sigma", "σ"),
-            ("sigma", "ς"),
-            ("Psi", "Ψ"),
-            ("psi", "ψ"),
-            ("Epsilon", "ϵ"),
-            ("epsilon", "ε"),
-            ("Iota", "Ι"),
-            ("iota", "ι"),
-            ("Xi", "Ξ"),
-            ("xi", "ξ"),
-            ("Tau", "Τ"),
-            ("tau", "τ"),
-            ("Omega", "Ω"),
-            ("omega", "ω"),
-            // Symbols
-            ("infty", "∞"),
-            ("infinity", "∞"),
-        ]
-        .into_iter()
-        .collect();
     }
 
     style
@@ -482,10 +489,14 @@ xi + Tau + tau + Omega + omega",
         let mut parser = mathParser::new(tokens);
         let context = parser.multilineEquation().unwrap();
 
-        if let Some(latex) = options.get("style") {
-            parse_latex(context, &style)
+        if let Some(value) = options.get("style") {
+            if *value == "Latex" {
+                parse_latex(context, &style)
+            } else {
+                parse(context, &style)
+            }
         } else {
-            parse(context, &style)
+            "no style".to_string()
         }
     }
 }
