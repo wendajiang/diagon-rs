@@ -7,12 +7,14 @@ mod sequence_graph;
 mod table;
 mod tree;
 
+use crate::translator::math::Math;
 use crate::translator::table::Table;
 use crate::translator::Widget::Combobox;
 use math::Draw as MathDraw;
 use math::Style as MathStyle;
 use once_cell::sync::{Lazy, OnceCell};
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 use tree::Tree;
 
@@ -49,6 +51,12 @@ impl PartialEq for OptionDescription {
 pub struct Example {
     pub title: String,
     pub input: String,
+}
+
+impl Display for Example {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.title)
+    }
 }
 
 impl From<(&str, &str)> for Example {
@@ -114,6 +122,10 @@ pub static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
     res.insert(
         Table::identifier(),
         (Table::translate, Table::options, Table::examples),
+    );
+    res.insert(
+        Math::identifier(),
+        (Math::translate, Math::options, Math::examples),
     );
     res
 });

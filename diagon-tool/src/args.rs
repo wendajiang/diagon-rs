@@ -10,7 +10,7 @@ use std::collections::HashMap;
 pub struct Args {
     #[clap(long = "command",
     possible_values =
-    ["Tree", "Table"])]
+    ["Tree", "Table", "Math"])]
     pub component: String,
 
     #[clap(long, default_value = "")]
