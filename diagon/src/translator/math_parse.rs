@@ -317,7 +317,7 @@ fn parse_matrix(context: Rc<MatrixContextAll>, style: &MathStyle) -> MathDraw {
     wrap_with_parenthesis(&draw, style)
 }
 
-fn check_func_sqrt(context: Rc<FunctionContextAll>) -> bool {
+pub fn check_func_sqrt(context: Rc<FunctionContextAll>) -> bool {
     match context.equation_all().len() {
         1 => true,
         _ => {
@@ -354,7 +354,7 @@ fn parse_func_sqrt(context: Rc<FunctionContextAll>, style: &MathStyle) -> MathDr
     }
 }
 
-fn check_func_sum(context: Rc<FunctionContextAll>) -> bool {
+pub fn check_func_sum(context: Rc<FunctionContextAll>) -> bool {
     match context.equation_all().len() {
         i if i > 3 => {
             eprintln!(
@@ -417,7 +417,7 @@ fn parse_func_sum(context: Rc<FunctionContextAll>, style: &MathStyle) -> MathDra
     compose_horizontal(sum, content, 1)
 }
 
-fn check_func_integral(context: Rc<FunctionContextAll>) -> bool {
+pub fn check_func_integral(context: Rc<FunctionContextAll>) -> bool {
     match context.equation_all().len() {
         i if i > 3 => {
             eprintln!(
@@ -471,7 +471,7 @@ fn parse_func_integral(context: Rc<FunctionContextAll>, style: &MathStyle) -> Ma
     compose_horizontal(sum, content, 1)
 }
 
-fn check_func_mult(context: Rc<FunctionContextAll>) -> bool {
+pub fn check_func_mult(context: Rc<FunctionContextAll>) -> bool {
     match context.equation_all().len() {
         i if i > 3 => {
             eprintln!(

@@ -7,10 +7,16 @@ into an ascii-art representation. It is written in C++ and use WebAssembly, HTML
 Application.
 We also expose a command line interface, for personal and 3rd party tools.
 
+# diagon-tui
+
+- [ ] tui bin
+- [ ] github release
+- [ ] homebrew tap release
+
 # Support Subcommand
 - [x] tree
 - [x] table
-- [x] math (Latex todo)
+- [x] math
 - [ ] sequence (doing)
 - [ ] frame (todo)
 - [ ] graph_dag (todo)
