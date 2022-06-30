@@ -1,15 +1,15 @@
 use super::MathDraw;
 use super::MathStyle;
-use crate::translator::antlr::{
-    mathLexer, mathParser, mathParserContextType, AddopContextAll, AddopContextAttrs,
-    AtomContextAll, AtomContextAttrs, EquationContextAll, EquationContextAttrs,
-    ExpressionContextAll, ExpressionContextAttrs, FactorContextAll, FactorContextAttrs,
-    FunctionContextAll, FunctionContextAttrs, MatrixContextAll, MatrixContextAttrs,
-    MatrixLineContextAttrs, MulopContextAttrs, MultilineEquationContext,
-    MultilineEquationContextAttrs, NewlinesContextAll, NewlinesContextAttrs, PowopContextAll,
-    PowopContextAttrs, RelopContextAttrs, TermContextAll, TermContextAttrs, ValueBangContextAll,
-    ValueBangContextAttrs, ValueContextAll, ValueContextAttrs, VariableContextAll,
-    VariableContextAttrs,
+use crate::translator::antlr::mathlexer::mathLexer;
+use crate::translator::antlr::mathparser::{
+    mathParser, mathParserContextType, AddopContextAll, AddopContextAttrs, AtomContextAll,
+    AtomContextAttrs, EquationContextAll, EquationContextAttrs, ExpressionContextAll,
+    ExpressionContextAttrs, FactorContextAll, FactorContextAttrs, FunctionContextAll,
+    FunctionContextAttrs, MatrixContextAll, MatrixContextAttrs, MatrixLineContextAttrs,
+    MulopContextAttrs, MultilineEquationContext, MultilineEquationContextAttrs, NewlinesContextAll,
+    NewlinesContextAttrs, PowopContextAll, PowopContextAttrs, RelopContextAttrs, TermContextAll,
+    TermContextAttrs, ValueBangContextAll, ValueBangContextAttrs, ValueContextAll,
+    ValueContextAttrs, VariableContextAll, VariableContextAttrs,
 };
 use crate::translator::math::{
     compose_diagonal_down, compose_diagonal_up, compose_diagonal_up_and_down, compose_horizontal,

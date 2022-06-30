@@ -1,5 +1,5 @@
 use super::MathStyle;
-use crate::translator::antlr::{
+use crate::translator::antlr::mathparser::{
     mathParserContextType, AddopContextAttrs, AtomContextAll, AtomContextAttrs, EquationContextAll,
     EquationContextAttrs, ExpressionContextAll, ExpressionContextAttrs, FactorContextAll,
     FactorContextAttrs, FunctionContextAll, FunctionContextAttrs, MatrixContextAll,

@@ -2,19 +2,15 @@ mod flowchartlexer;
 mod flowchartlistener;
 mod flowchartparser;
 
-mod mathlexer;
-mod mathlistener;
-mod mathparser;
+pub mod mathlexer;
+pub mod mathlistener;
+pub mod mathparser;
 
-mod sequencelexer;
-mod sequencelistener;
-mod sequenceparser;
-mod sequencevisitor;
+pub mod sequencelexer;
+pub mod sequencelistener;
+pub mod sequenceparser;
+pub mod sequencevisitor;
 
 mod graph_planarlexer;
 mod graph_planarlistener;
 mod graph_planarparser;
-
-pub use mathlexer::*;
-pub use mathlistener::*;
-pub use mathparser::*;

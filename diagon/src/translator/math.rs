@@ -1,4 +1,4 @@
-use crate::translator::antlr::{mathLexer, mathParser};
+use crate::translator::antlr::{mathlexer::mathLexer, mathparser::mathParser};
 use crate::translator::math_latex::parse_latex;
 use crate::translator::math_parse::parse;
 use crate::translator::{serialize_option, Example, OptionDescription, Translator, Widget};
