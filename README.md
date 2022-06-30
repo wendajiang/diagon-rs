@@ -17,7 +17,7 @@ We also expose a command line interface, for personal and 3rd party tools.
 - [x] table
 - [x] math
 - [ ] sequence (doing)
-- [ ] frame (todo)
+- [x] frame
 - [ ] graph_dag (todo)
 - [ ] graph_planar (todo)
 

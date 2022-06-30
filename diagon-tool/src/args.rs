@@ -9,7 +9,7 @@ use dialoguer::Select;
 pub struct Args {
     #[clap(long = "command",
     possible_values =
-    ["Tree", "Table", "Math"])]
+    ["Tree", "Table", "Math", "Frame"])]
     pub component: String,
 
     #[clap(long, default_value = "")]

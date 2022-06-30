@@ -37,14 +37,14 @@ impl Translator for Frame {
             title: "1-Hello world".to_string(),
             #[rustfmt::skip]
             input:
-            r#"#include <iostream>
+            r##"#include <iostream>
 using namespace std;
 
 int main() {
     cout << "Hello, world!";
     return 0;
 }           
-"#.to_string(),
+"##.to_string(),
         }]
     }
 
@@ -52,18 +52,18 @@ int main() {
         let options = serialize_option(options);
 
         let ascii_only = if let Some(val) = options.get("ascii_only") {
-            val == "true"
+            **val == *"true"
         } else {
             false
         };
 
         let line_number = if let Some(val) = options.get("line_number") {
-            val == "true"
+            **val == *"true"
         } else {
             false
         };
 
-        let lines = input.lines().collect::<Vec<String>>();
+        let lines: Vec<&str> = input.lines().collect();
 
         let mut number_len = 0;
         let mut max_number = 1;
@@ -71,18 +71,18 @@ int main() {
             max_number *= 10;
             number_len += 1;
         }
-        let text_max_width = lines.iter().fold(0, |acc, &str| acc.max(str.len().into()));
+        let text_max_width = lines.iter().fold(0, |acc, &str| acc.max(str.len()));
 
         let (width, height, text_x) = if line_number {
             (
-                number_len as i32 + text_max_width + 3,
-                lines.len() as i32 + 2 + ascii_only as usize,
+                number_len as i32 + text_max_width as i32 + 3,
+                lines.len() as i32 + 2 + ascii_only as i32,
                 number_len as i32 + 2,
             )
         } else {
             (
-                number_len + text_max_width + 2,
-                lines.len() + 2 + ascii_only as usize,
+                number_len as i32 + text_max_width as i32 + 2,
+                lines.len() as i32 + 2 + ascii_only as i32,
                 1,
             )
         };
@@ -92,14 +92,14 @@ int main() {
         let mut screen = Screen::new(width, height);
 
         // draw text
-        for &line in lines {
-            screen.draw_text(text_x, text_y, line);
+        for (y, line) in lines.iter().enumerate() {
+            screen.draw_text(text_x, text_y + y as i32, line.chars().collect());
         }
 
         // draw line number
         if line_number {
             for y in 0..lines.len() {
-                screen.draw_text(1, text_y + 1, (y + 1).to_string().chars().collect())
+                screen.draw_text(1, text_y + y as i32, (y + 1).to_string().chars().collect())
             }
         }
 

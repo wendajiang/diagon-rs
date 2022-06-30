@@ -11,6 +11,7 @@ mod tree;
 use crate::translator::math::Math;
 use crate::translator::table::Table;
 use crate::translator::Widget::Combobox;
+use frame::Frame;
 use math::Draw as MathDraw;
 use math::Style as MathStyle;
 use once_cell::sync::{Lazy, OnceCell};
@@ -18,8 +19,6 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 use tree::Tree;
-use frame::
-use crate::translator::frame::Frame;
 
 #[derive(Debug)]
 pub enum Widget {
@@ -136,6 +135,9 @@ pub static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
         Math::identifier(),
         (Math::translate, Math::options, Math::examples),
     );
-    res.insert(Frame::identifier(), (Frame::translate, Frame::options, Frame::examples));
+    res.insert(
+        Frame::identifier(),
+        (Frame::translate, Frame::options, Frame::examples),
+    );
     res
 });
