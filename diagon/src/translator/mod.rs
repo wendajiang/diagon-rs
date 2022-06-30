@@ -1,4 +1,5 @@
 mod antlr;
+mod frame;
 mod math;
 mod math_latex;
 mod math_parse;
@@ -17,6 +18,8 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::hash::{Hash, Hasher};
 use tree::Tree;
+use frame::
+use crate::translator::frame::Frame;
 
 #[derive(Debug)]
 pub enum Widget {
@@ -133,5 +136,6 @@ pub static GLOBAL_FN: Lazy<GlobalHashMap> = Lazy::new(|| {
         Math::identifier(),
         (Math::translate, Math::options, Math::examples),
     );
+    res.insert(Frame::identifier(), (Frame::translate, Frame::options, Frame::examples));
     res
 });

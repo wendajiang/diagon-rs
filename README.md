@@ -11,7 +11,6 @@ We also expose a command line interface, for personal and 3rd party tools.
 
 - [ ] tui bin
 - [ ] github release
-- [ ] homebrew tap release
 
 # Support Subcommand
 - [x] tree
