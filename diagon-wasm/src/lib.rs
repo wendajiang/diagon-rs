@@ -1,17 +1,11 @@
-use diagon_rs::translator;
+use diagon::translator;
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
+#[wasm_bindgen(JsName = "value")]
 pub fn translate(translator_name: String, input: String) -> String {
-    let maybe_func = translator::GLOBAL_FN.get(args.component.as_str());
-    unimplemented!()
-}
+    let maybe_func = translator::GLOBAL_FN.get(translator_name.as_str());
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
+    let (opt_func, options, examples) = maybe_func.unwrap();
+
+    unimplemented!()
 }
