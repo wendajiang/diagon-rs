@@ -7,7 +7,7 @@ fn main() {
 
     let additional_args = vec![Some("-visitor"), None, None, None, None];
     let antlr_path =
-        "/Users/david/learncppcode/diagon-rs/diagon/assets/antlr4-4.8-2-SNAPSHOT-complete.jar";
+        "./assets/antlr4-4.8-2-SNAPSHOT-complete.jar";
 
     for (grammar, arg) in antlr_files.into_iter().zip(additional_args) {
         // ignoring error because we do not need to run anything when deploying to crates.io
